@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Lân Sư Rồng · So sánh phiên bản</title>
+<link rel="icon" href="logo-mark.png">
+<style>
+  :root { --nga:#F0E8D8; --son:#B31217; --than:#1E1E22; --nghe:#F0AA29; }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; background: var(--than); font-family: "Be Vietnam Pro", system-ui, -apple-system, "Segoe UI", sans-serif; }
+  #view { position: fixed; inset: 0; width: 100%; height: 100%; border: 0; background: var(--nga); }
+  .switch {
+    position: fixed; z-index: 10; left: 50%; bottom: max(18px, env(safe-area-inset-bottom)); transform: translateX(-50%);
+    display: flex; align-items: center; gap: 6px; padding: 6px; border-radius: 99px;
+    background: rgba(30,30,34,.92); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+    box-shadow: 0 12px 40px -10px rgba(0,0,0,.5); color: var(--nga);
+  }
+  .switch img { width: 30px; height: 30px; margin: 0 4px 0 6px; }
+  .switch button, .switch a {
+    border: 0; background: transparent; color: inherit; font: inherit; font-size: 14px; font-weight: 600;
+    padding: 10px 16px; border-radius: 99px; cursor: pointer; text-decoration: none; white-space: nowrap;
+  }
+  .switch button small { font-weight: 400; opacity: .7; margin-left: 6px; }
+  .switch button[aria-pressed="true"] { background: var(--son); color: #fff; }
+  .switch button:not([aria-pressed="true"]):hover, .switch a:hover { background: rgba(240,232,216,.12); }
+  .switch a { font-weight: 500; opacity: .8; font-size: 13px; }
+  .switch .hide { width: 34px; padding: 10px 0; opacity: .6; }
+  .switch.min { padding: 4px; }
+  .switch.min > :not(.hide) { display: none; }
+  @media (max-width: 520px) { .switch button small, .switch a { display: none; } .switch img { display: none; } }
+  :focus-visible { outline: 2px solid var(--nghe); outline-offset: 2px; }
+</style>
+</head>
+<body>
+<iframe id="view" title="Trang chủ Liên đoàn Lân Sư Rồng Việt Nam" src="v2/"></iframe>
+
+<nav class="switch" id="switch" aria-label="Chọn phiên bản thiết kế">
+  <img src="logo-mark-light.png" alt="">
+  <button type="button" data-v="v1" aria-pressed="false">V1<small>Bản cũ</small></button>
+  <button type="button" data-v="v2" aria-pressed="true">V2<small>Bản mới</small></button>
+  <a id="open" href="v2/" target="_blank" rel="noopener">Mở toàn trang ↗</a>
+  <button type="button" class="hide" id="hide" aria-label="Thu gọn thanh chọn">–</button>
+</nav>
+
+<script>
+  var view = document.getElementById('view'), open = document.getElementById('open'), bar = document.getElementById('switch');
+  var btns = document.querySelectorAll('[data-v]');
+  function show(v) {
+    if (v !== 'v1' && v !== 'v2') v = 'v2';
+    view.src = v + '/'; open.href = v + '/';
+    btns.forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.v === v); });
+    if (location.hash !== '#' + v) history.replaceState(null, '', '#' + v);
+  }
+  btns.forEach(function (b) { b.addEventListener('click', function () { show(b.dataset.v); }); });
+  document.getElementById('hide').addEventListener('click', function () {
+    var m = bar.classList.toggle('min'); this.textContent = m ? '+' : '–';
+    this.setAttribute('aria-label', m ? 'Mở thanh chọn' : 'Thu gọn thanh chọn');
+  });
+  window.addEventListener('hashchange', function () { show(location.hash.slice(1)); });
+  show(location.hash.slice(1) || 'v2');
+</script>
+</body>
+</html>
